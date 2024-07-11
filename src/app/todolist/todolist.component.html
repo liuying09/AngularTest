@@ -1,0 +1,125 @@
+<section class="todoapp">
+  <header class="header">
+    <h1>todos</h1>
+    <input
+      class="new-todo"
+      placeholder="What needs to be done?"
+      autofocus
+      (keyup)="addTodo($event)"
+    />
+  </header>
+
+  <!-- 清單區域開始 
+        [] - 屬性綁定 (Property Binding)
+        用於綁定 HTML 元素的屬性。它允許你將組件的屬性或表達式的值動態地綁定到 HTML 元素的屬性
+        ex: 
+        <input [value]="name">
+        <img [src]="imageUrl">
+        <li [class.completed]="todo.done"></li>
+        [value] 綁定到 name，因此 input 元素的值將根據 name 的變化動態更新。
+        [src] 綁定到 imageUrl，因此 img 元素的 src 屬性將根據 imageUrl 的變化動態更新。
+        [class.completed] 綁定到 todo.done，因此 li 元素的 completed 類將根據 todo.done 的變化動態添加或移除。
+
+        [class.completed]：這是一種屬性綁定語法，用於動態添加或移除 CSS 類 completed。 
+
+        () - 事件綁定 (Event Binding)
+        綁定 HTML 元素的事件。它允許你將 HTML 元素的事件（如 click、input 等）綁定到組件的方法
+        ex:
+        <button (click)="handleClick()">Click Me</button>
+        <input (input)="onInput($event)">
+        (click) 綁定到 handleClick() 方法，因此當 button 元素被點擊時，handleClick() 方法將被調用。
+        (input) 綁定到 onInput($event) 方法，因此當 input 元素的值發生變化時，onInput($event) 方法將被調用，並將事件對象作為參數傳遞。
+
+      -->
+  <section class="main" *ngIf="getList().length">
+
+    <!-- 將全部事項勾為已完成 -->
+    <input
+      id="toggle-all"
+      class="toggle-all"
+      type="checkbox"
+      *ngIf="getAllList().length"
+      #toggleall
+      [checked]="allCompleted()"
+      (click)="setAllTo(toggleall.checked)"
+    />
+    <label for="toggle-all"></label>
+
+    <ul class="todo-list">
+      <li
+        *ngFor="let todo of getList(); let i = index"
+        [class.completed]="todo.done"
+        [class.editing]="todo.editing"
+      >
+        <div class="view">
+          <input
+            class="toggle"
+            type="checkbox"
+            (click)="todo.toggleCompletion()"
+            [checked]="todo.done"
+          />
+          <label (dblclick)="edit(todo)">{{ todo.getTitle() }}</label>
+          <button class="destroy" (click)="remove(i)"></button>
+        </div>
+        <input
+          class="edit"
+          #edittodo
+          *ngIf="todo.editing"
+          [value]="todo.getTitle()"
+          (blur)="update(todo, edittodo.value)"
+          (keyup.enter)="update(todo, edittodo.value)"
+          (keyup.escape)="cancelEditing(todo)"
+        />
+      </li>
+    </ul>
+  </section>
+  <!-- 清單區域結束 -->
+
+  <footer class="footer" >
+    <!-- 所在頁籤的代辦事項數量 -->
+    <span class="todo-count">
+      <strong>{{ getTotalCount().length }}</strong>
+      {{ getTotalCount().length > 1 ? "items" : "item" }} left
+    </span>
+    <!-- 切換過濾事項的狀態 -->
+    <ul class="filters">
+      <li>
+        <a
+          href="javascript:;"
+          [class.selected]="checkStatus(todoStatusType.All)"
+          (click)="setStatus(todoStatusType.All)"
+        >
+          All
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="javascript:;"
+          [class.selected]="checkStatus(todoStatusType.Active)"
+          (click)="setStatus(todoStatusType.Active)"
+        >
+          Active
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="javascript:;"
+          [class.selected]="checkStatus(todoStatusType.Completed)"
+          (click)="setStatus(todoStatusType.Completed)"
+        >
+          Completed
+        </a>
+      </li>
+    </ul>
+    <!-- 移除完成的事項 -->
+    <button
+      class="clear-completed"
+      *ngIf="getCompletedList().length"
+      (click)="removeCompleted()"
+    >
+      Clear completed
+    </button>
+  </footer>
+</section>
