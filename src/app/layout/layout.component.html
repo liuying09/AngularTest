@@ -1,0 +1,12 @@
+<!-- <ul>
+    <li><a [routerLink]="'/message'">message</a></li>
+    <li><a [routerLink]="'/todolist'">todolist</a></li>
+  </ul> -->
+
+<!--  routerLinkActive 會自動幫忙加上class ,樣式寫在 app.component.css內 -->
+<ul>
+    <li><a routerLink="/message" routerLinkActive="active">message</a></li>
+    <li><a routerLink="/todolist" routerLinkActive="active">todolist</a></li>
+    <li><a routerLink="/login" routerLinkActive="active"> Logout </a></li>
+  </ul>
+  <router-outlet></router-outlet>
